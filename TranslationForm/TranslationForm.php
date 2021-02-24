@@ -11,7 +11,7 @@
 
 namespace A2lix\TranslationFormBundle\TranslationForm;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\HttpKernel\Kernel;
