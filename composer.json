@@ -28,13 +28,13 @@
     ],
     "require": {
         "php": ">=7.4",
-        "symfony/config": "^2.3 || ^3.0 || ^4.0",
-        "symfony/dependency-injection": "^2.3 || ^3.0 || ^4.0",
-        "symfony/event-dispatcher": "^2.3 || ^3.0 || ^4.0",
-        "symfony/form": "^2.3 || ^3.0 || ^4.0",
-        "symfony/http-foundation": "^2.3 || ^3.0 || ^4.0",
-        "symfony/http-kernel": "^2.3 || ^3.0 || ^4.0",
-        "symfony/options-resolver": "^2.3 || ^3.0 || ^4.0"
+        "symfony/config": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/dependency-injection": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/event-dispatcher": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/form": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/http-foundation": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/http-kernel": "^2.3 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/options-resolver": "^2.3 || ^3.0 || ^4.0 || ^5.0"
     },
     "require-dev": {
         "doctrine/common": "^2.3",
@@ -43,9 +43,9 @@
         "gedmo/doctrine-extensions": "^2.4",
         "knplabs/doctrine-behaviors": "^1.0",
         "matthiasnoback/symfony-dependency-injection-test": "^0.7 || ^1.2",
-        "symfony/doctrine-bridge": "^2.3.5 || ^3.0 || ^4.0",
-        "symfony/phpunit-bridge": "^4.0",
-        "symfony/validator": "^2.3 || ^3.0 || ^4.0"
+        "symfony/doctrine-bridge": "^2.3.5 || ^3.0 || ^4.0 || ^5.0",
+        "symfony/phpunit-bridge": "^4.0 || ^5.0",
+        "symfony/validator": "^2.3 || ^3.0 || ^4.0 || ^5.0"
     },
     "suggest": {
         "a2lix/i18n-doctrine-bundle": "For A2lix strategy",
