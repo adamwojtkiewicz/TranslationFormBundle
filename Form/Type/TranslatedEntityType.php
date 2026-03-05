@@ -85,7 +85,7 @@ class TranslatedEntityType extends AbstractType
         return $this->getBlockPrefix();
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'a2lix_translatedEntity';
     }
