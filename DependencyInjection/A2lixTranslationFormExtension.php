@@ -29,7 +29,7 @@ class A2lixTranslationFormExtension extends Extension
      * @param array                                                   $configs
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), $configs);
