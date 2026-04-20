@@ -30,7 +30,7 @@ class TranslatedEntityType extends AbstractType
     private $requestStack;
 
     // BC for SF 2.3
-    public function setRequest(Request $request = null)
+    public function setRequest(?Request $request = null)
     {
         $this->request = $request;
     }
