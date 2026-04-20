@@ -22,7 +22,7 @@ class LocaleProviderPass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $localeProvider = $container->getParameter('a2lix_translation_form.locale_provider');
 
