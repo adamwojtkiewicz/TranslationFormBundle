@@ -35,7 +35,7 @@ class TranslationsListener implements EventSubscriberInterface
     /**
      * @param FormEvent $event
      */
-    public function preSetData(FormEvent $event)
+    public function preSetData(FormEvent $event): void
     {
         $form = $event->getForm();
 
@@ -65,7 +65,7 @@ class TranslationsListener implements EventSubscriberInterface
     /**
      * @param FormEvent $event
      */
-    public function submit(FormEvent $event)
+    public function submit(FormEvent $event): void
     {
         $data = $event->getData();
 
@@ -79,7 +79,7 @@ class TranslationsListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FormEvents::PRE_SET_DATA => 'preSetData',

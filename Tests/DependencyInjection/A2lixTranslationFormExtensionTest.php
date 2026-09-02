@@ -16,7 +16,7 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 class A2lixTranslationFormExtensionTest extends AbstractExtensionTestCase
 {
-    public function testAfterLoadingParametersAreSet()
+    public function testAfterLoadingParametersAreSet(): void
     {
         $this->load();
         $this->assertContainerBuilderHasParameter('a2lix_translation_form.locale_provider', 'default');
@@ -30,14 +30,14 @@ class A2lixTranslationFormExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasAlias('a2lix_translation_form.manager_registry', 'doctrine');
     }
 
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new A2lixTranslationFormExtension(),
         ];
     }
 
-    protected function getMinimalConfiguration()
+    protected function getMinimalConfiguration(): array
     {
         return [
             'locales' => ['es', 'en'],

@@ -23,7 +23,7 @@ class TranslationsFormsListener implements EventSubscriberInterface
     /**
      * @param FormEvent $event
      */
-    public function submit(FormEvent $event)
+    public function submit(FormEvent $event): void
     {
         $data = $event->getData();
 
@@ -37,7 +37,7 @@ class TranslationsFormsListener implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FormEvents::SUBMIT => 'submit',

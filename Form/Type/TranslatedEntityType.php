@@ -12,12 +12,12 @@
 namespace A2lix\TranslationFormBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Translated entity.
@@ -30,12 +30,12 @@ class TranslatedEntityType extends AbstractType
     private $requestStack;
 
     // BC for SF 2.3
-    public function setRequest(?Request $request = null)
+    public function setRequest(?Request $request = null): void
     {
         $this->request = $request;
     }
 
-    public function setRequestStack(RequestStack $requestStack)
+    public function setRequestStack(RequestStack $requestStack): void
     {
         $this->requestStack = $requestStack;
     }
@@ -43,7 +43,7 @@ class TranslatedEntityType extends AbstractType
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         // BC for SF < 2.7
         $optionProperty = 'choice_label';
@@ -65,24 +65,9 @@ class TranslatedEntityType extends AbstractType
         ]);
     }
 
-    // BC for SF < 2.7
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function getParent(): ?string
     {
-        $this->configureOptions($resolver);
-    }
-
-    public function getParent()
-    {
-        return
-            method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix') ?
-            'Symfony\Bridge\Doctrine\Form\Type\EntityType' :
-            'entity';
-    }
-
-    // BC for SF < 3.0
-    public function getName()
-    {
-        return $this->getBlockPrefix();
+        return EntityType::class;
     }
 
     public function getBlockPrefix(): string
@@ -90,16 +75,16 @@ class TranslatedEntityType extends AbstractType
         return 'a2lix_translatedEntity';
     }
 
-    private function getLocale()
+    private function getLocale(): string
     {
-        if ($this->requestStack) {
-            return $this->requestStack->getCurrentRequest()->getLocale();
+        if ($this->requestStack && null !== ($request = $this->requestStack->getCurrentRequest())) {
+            return $request->getLocale();
         }
 
         if ($this->request) {
             return $this->request->getLocale();
         }
 
-        throw new \Exception('Error while getting request');
+        throw new \RuntimeException('Error while getting request');
     }
 }

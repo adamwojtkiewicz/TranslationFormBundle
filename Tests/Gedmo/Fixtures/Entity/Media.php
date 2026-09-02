@@ -14,37 +14,25 @@ namespace A2lix\TranslationFormBundle\Tests\Gedmo\Fixtures\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Media
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(length=10)
-     */
+    #[ORM\Column(type: 'string', length: 10)]
     protected $locale;
 
-    /**
-     * @var Product
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="medias")
-     */
+    /** @var Product */
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'medias')]
     protected $product;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $url;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $description;
 
     public function getId()

@@ -12,31 +12,22 @@
 namespace A2lix\TranslationFormBundle\Tests\Gedmo\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="Product_translations", uniqueConstraints={
- *    @ORM\UniqueConstraint(name="lookup_unique_idx", columns={"locale", "object_id"})
- * })
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'Product_translations', uniqueConstraints: [
+    new ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_id']),
+])]
 class ProductTranslation extends AbstractPersonalTranslation
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="translations")
-     * @ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'translations')]
+    #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: false)]
     protected $object;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     protected $description;
 
     public function getTitle()

@@ -19,14 +19,20 @@ use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
 use A2lix\TranslationFormBundle\Locale\DefaultProvider;
 use A2lix\TranslationFormBundle\TranslationForm\TranslationForm;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
-use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Validator\Type\FormTypeValidatorExtension;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 abstract class TranslationsTypeTestCase extends TypeTestCase
 {
@@ -40,9 +46,17 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
      */
     private $emRegistry;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->em = DoctrineTestHelper::createTestEntityManager();
+        $configuration = ORMSetup::createAttributeMetadataConfiguration(
+            [__DIR__.'/Gedmo/Fixtures/Entity'],
+            true
+        );
+        $connection = DriverManager::getConnection([
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        ], $configuration);
+        $this->em = new EntityManager($connection, $configuration);
         $this->emRegistry = $this->getEmRegistry($this->em);
 
         $schemaTool = new SchemaTool($this->em);
@@ -58,31 +72,19 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
         } catch (\Exception $e) {
         }
 
+        $this->dispatcher = new EventDispatcher();
         parent::setUp();
 
         $formExtensions = [new DoctrineOrmExtension($this->emRegistry)];
-        $resolvedFormTypeFactory = $this->getMockBuilder('Symfony\Component\Form\ResolvedFormTypeFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $resolvedFormTypeFactory = $this->createStub('Symfony\Component\Form\ResolvedFormTypeFactory');
 
         $formRegistry = new FormRegistry($formExtensions, $resolvedFormTypeFactory);
         $translationForm = new TranslationForm($formRegistry, $this->emRegistry);
         $translationsListener = new TranslationsListener($translationForm);
         $translationsFormsListener = new TranslationsFormsListener();
 
-        if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
-            $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')
-                ->disableOriginalConstructor()
-                ->getMock();
-        } else {
-            $validator = $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')
-                ->disableOriginalConstructor()
-                ->getMock();
-        }
-
-        $validator->expects($this->any())
-            ->method('validate')
-            ->will($this->returnValue([]));
+        $validator = $this->createStub(ValidatorInterface::class);
+        $validator->method('validate')->willReturn(new ConstraintViolationList());
 
         $this->factory = Forms::createFormFactoryBuilder()
             ->addExtensions(
@@ -90,9 +92,7 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
             )
             ->addTypeExtension(new FormTypeValidatorExtension($validator))
             ->addTypeGuesser(
-                $this->getMockBuilder('Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser')
-                    ->disableOriginalConstructor()
-                    ->getMock()
+                $this->createStub('Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser')
             )
             ->addTypes([
                 new TranslationsType($translationsListener, new DefaultProvider(['fr', 'en', 'de'], 'en')),
@@ -105,13 +105,10 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
             ])
             ->getFormFactory();
 
-        $this->dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
         $this->builder = new FormBuilder(null, null, $this->dispatcher, $this->factory);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -119,12 +116,12 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
         $this->emRegistry = null;
     }
 
-    protected function getUsedEntityFixtures()
+    protected function getUsedEntityFixtures(): array
     {
         return [];
     }
 
-    protected function persist(array $entities)
+    protected function persist(array $entities): void
     {
         foreach ($entities as $entity) {
             $this->em->persist($entity);
@@ -135,16 +132,10 @@ abstract class TranslationsTypeTestCase extends TypeTestCase
         // be managed!
     }
 
-    protected function getEmRegistry($em)
+    protected function getEmRegistry($em): Registry
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $container->expects($this->any())
-            ->method('get')
-            ->with($this->equalTo('doctrine.orm.default_entity_manager'))
-            ->will($this->returnValue($em));
+        $container = new Container();
+        $container->set('doctrine.orm.default_entity_manager', $em);
 
         return new Registry($container, [], ['default' => 'doctrine.orm.default_entity_manager'], 'default', 'default');
     }

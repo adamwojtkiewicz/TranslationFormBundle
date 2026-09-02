@@ -12,7 +12,7 @@
 namespace A2lix\TranslationFormBundle\TranslationForm;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Persistence\Proxy;
 use Symfony\Component\Form\FormRegistry;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -140,7 +140,9 @@ class TranslationForm implements TranslationFormInterface
     protected function getTranslationFields($translationClass, array $exclude = [])
     {
         $fields = [];
-        $translationClass = ClassUtils::getRealClass($translationClass);
+        if (is_subclass_of($translationClass, Proxy::class)) {
+            $translationClass = get_parent_class($translationClass) ?: $translationClass;
+        }
 
         if ($manager = $this->managerRegistry->getManagerForClass($translationClass)) {
             $metadataClass = $manager->getMetadataFactory()->getMetadataFor($translationClass);

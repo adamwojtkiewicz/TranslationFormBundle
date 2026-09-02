@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} / Symfony ${{ matrix.symfony }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.4'
+            symfony: '6.4.*'
+          - php: '8.5'
+            symfony: '7.4.*'
+
+    env:
+      SYMFONY_REQUIRE: ${{ matrix.symfony }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo_sqlite
+          coverage: none
+
+      - name: Install Symfony Flex
+        run: |
+          composer global config --no-plugins allow-plugins.symfony/flex true
+          composer global require symfony/flex --quiet
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --no-progress --no-interaction
+
+      - name: Validate package metadata
+        run: composer validate --strict
+
+      - name: Run tests
+        run: vendor/bin/phpunit --do-not-record-test-run-history
+
+      - name: Check security advisories
+        run: composer audit --no-interaction

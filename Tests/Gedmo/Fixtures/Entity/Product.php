@@ -16,45 +16,31 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Product
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(nullable=true)
-     * @Gedmo\Translatable
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    #[Gedmo\Translatable]
     protected $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Gedmo\Translatable
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Gedmo\Translatable]
     protected $description;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $url;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Media", mappedBy="product", indexBy="locale", cascade={"all"}, orphanRemoval=true)
-     * @Assert\Valid
-     */
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'product', indexBy: 'locale', cascade: ['all'], orphanRemoval: true)]
+    #[Assert\Valid]
     protected $medias;
 
-    /**
-     * @ORM\OneToMany(targetEntity="ProductTranslation", mappedBy="object", indexBy="locale", cascade={"all"}, orphanRemoval=true)
-     * @Assert\Valid
-     */
+    #[ORM\OneToMany(targetEntity: ProductTranslation::class, mappedBy: 'object', indexBy: 'locale', cascade: ['all'], orphanRemoval: true)]
+    #[Assert\Valid]
     protected $translations;
 
     public function __construct()

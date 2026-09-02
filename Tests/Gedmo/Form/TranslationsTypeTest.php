@@ -17,7 +17,7 @@ use A2lix\TranslationFormBundle\Tests\TranslationsTypeTestCase;
 
 class TranslationsTypeTest extends TranslationsTypeTestCase
 {
-    public function testSubmitValidDefaultConfigurationData()
+    public function testSubmitValidDefaultConfigurationData(): void
     {
         if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
             $formType = 'Symfony\Component\Form\Extension\Core\Type\FormType';
@@ -113,7 +113,7 @@ class TranslationsTypeTest extends TranslationsTypeTestCase
         $this->assertEquals($product, $form->getData());
     }
 
-    public function testSubmitValidConfiguration1Data()
+    public function testSubmitValidConfiguration1Data(): void
     {
         if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
             $formType = 'Symfony\Component\Form\Extension\Core\Type\FormType';
@@ -207,7 +207,7 @@ class TranslationsTypeTest extends TranslationsTypeTestCase
         $this->assertEquals($product, $form->getData());
     }
 
-    public function testSubmitValidConfiguration2Data()
+    public function testSubmitValidConfiguration2Data(): void
     {
         if (method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')) {
             $formType = 'Symfony\Component\Form\Extension\Core\Type\FormType';
@@ -313,7 +313,7 @@ class TranslationsTypeTest extends TranslationsTypeTestCase
         $this->assertEquals($product, $form->getData());
     }
 
-    protected function getUsedEntityFixtures()
+    protected function getUsedEntityFixtures(): array
     {
         return [
             'A2lix\\TranslationFormBundle\\Tests\\Gedmo\\Fixtures\\Entity\\Product',
